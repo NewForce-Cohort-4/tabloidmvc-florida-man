@@ -54,10 +54,17 @@ namespace TabloidMVC.Controllers
         }
 
         // GET: CategoryController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+        //public ActionResult Edit(int id)
+        //{
+        //    Category category = _categoryRepository.GetCategoryById(id);
+
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(category);
+        //}
 
         // POST: CategoryController/Edit/5
         [HttpPost]
