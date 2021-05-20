@@ -304,6 +304,40 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public void UpdatePost(Post post)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Post
+                            SET 
+                                 
+                                 Title = @title,
+                                 Content = @content,
+                                ImageLocation =  @imagelocation,
+                                c.[Name] AS CategoryName = @categoryname
+                        FROM Post
+                              LEFT JOIN Category c ON post.CategoryId = c.id
+                        WHERE Id = @id";
+
+                    
+                    cmd.Parameters.AddWithValue("@title", post.Title);
+                    cmd.Parameters.AddWithValue("@content", post.Content);
+                    cmd.Parameters.AddWithValue("@imagelocation", post.ImageLocation);
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+                    
+
+                    cmd.ExecuteNonQuery();
+
+                }
+                
+            }
+        }
+
 
     }
 }

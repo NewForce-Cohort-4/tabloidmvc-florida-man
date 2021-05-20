@@ -114,6 +114,48 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        
+        public ActionResult Edit(int id)
+        {
+
+            Post post = _postRepository.GetPostById(id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            else if (post.UserProfileId == GetCurrentUserProfileId())
+            {
+
+                return post.UserProfileId == GetCurrentUserProfileId() ? View(post) : NotFound();
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+        }
+
+        // POST: Owners/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Post post)
+        {
+
+            //try
+            {
+                _postRepository.UpdatePost(post);
+
+                return RedirectToAction("Index");
+            }
+            //catch (Exception ex)
+            {
+                //return View(post);
+            }
+
+        }
+
+
     }
 }
