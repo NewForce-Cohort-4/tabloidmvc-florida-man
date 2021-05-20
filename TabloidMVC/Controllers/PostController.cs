@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
@@ -116,8 +117,14 @@ namespace TabloidMVC.Controllers
 
         public ActionResult Edit(int id)
         {
-
+            List<Category> categories = _categoryRepository.GetAll();
             Post post = _postRepository.GetPostById(id);
+
+            PostEditViewModel vm = new PostEditViewModel()
+            {
+                CategoryOptions = categories,
+                Post = post
+            };
 
             if (post == null)
             {
@@ -126,15 +133,12 @@ namespace TabloidMVC.Controllers
 
             else if (post.UserProfileId == GetCurrentUserProfileId())
             {
-
-                return post.UserProfileId == GetCurrentUserProfileId() ? View(post) : NotFound();
+                return post.UserProfileId == GetCurrentUserProfileId() ? View(vm) : NotFound();
             }
             else
             {
                 return NotFound();
             }
-
-
         }
 
         // POST: Owners/Edit/5

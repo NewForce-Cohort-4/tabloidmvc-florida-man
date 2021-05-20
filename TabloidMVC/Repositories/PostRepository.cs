@@ -315,26 +315,22 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                             UPDATE Post
                             SET 
-                                 
-                                 Title = @title,
-                                 Content = @content,
-                                ImageLocation =  @imagelocation,
-                                c.[Name] AS CategoryName = @categoryname
-                        FROM Post
-                              LEFT JOIN Category c ON post.CategoryId = c.id
-                        WHERE Id = @id";
+                                Title = @title, 
+                                Content = @content, 
+                                Category = @category, 
+                                HeaderImage = @headerimage
+                                
+                            WHERE Id = @id";
 
-                    
                     cmd.Parameters.AddWithValue("@title", post.Title);
                     cmd.Parameters.AddWithValue("@content", post.Content);
-                    cmd.Parameters.AddWithValue("@imagelocation", post.ImageLocation);
-                    cmd.Parameters.AddWithValue("@id", post.Id);
+                    cmd.Parameters.AddWithValue("@category", post.Category);
+                    cmd.Parameters.AddWithValue("@headerimage", post.ImageLocation);
                     
+                    cmd.Parameters.AddWithValue("@id", post.Id);
 
                     cmd.ExecuteNonQuery();
-
                 }
-                
             }
         }
 
