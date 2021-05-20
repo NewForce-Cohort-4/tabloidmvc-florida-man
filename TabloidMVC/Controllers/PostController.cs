@@ -93,7 +93,7 @@ namespace TabloidMVC.Controllers
         public ActionResult Delete(int id)
         {
             Post post = _postRepository.GetPostById(id);
-            return View(post);
+            return post.UserProfileId == GetCurrentUserProfileId() ? View(post) : NotFound();
 
         }
 
@@ -114,5 +114,6 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        
     }
 }
