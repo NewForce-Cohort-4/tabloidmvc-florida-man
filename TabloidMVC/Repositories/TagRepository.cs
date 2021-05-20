@@ -102,18 +102,21 @@ namespace TabloidMVC.Repositories
 
         public void EditTag(Tag tag)
         {
+            // param of type id is from the GetTagById method and passed above
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
+                    // runs the SQL command
                     cmd.CommandText = @"
                             UPDATE Tag
                             SET 
                             Name = @name
                             WHERE Id = @id";
 
+                    // stores new values here
                     cmd.Parameters.AddWithValue("@name", tag.Name);
                     cmd.Parameters.AddWithValue("@id", tag.Id);
 
