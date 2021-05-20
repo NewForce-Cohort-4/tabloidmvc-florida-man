@@ -57,21 +57,34 @@ namespace TabloidMVC.Controllers
         // GET: TagsController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            // GetTagById method is invoked and the id of tag in the url path is passed as a param
+            Tag tag = _tagRepository.GetTagById(id);
+
+            if (tag == null)
+            {
+                return NotFound();
+            }
+
+            return View(tag);
         }
 
         // POST: TagsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Tag tag)
         {
+            // Once the id of the tag is passed with the GET request the POST form returns with the same Id
+            // EditTag method is called and passed the method as a parameter
+            // successul updates to DB will then return to the list or "Index"
             try
             {
-                return RedirectToAction(nameof(Index));
+                _tagRepository.EditTag(tag);
+
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(tag);
             }
         }
 
