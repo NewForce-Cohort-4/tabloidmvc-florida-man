@@ -40,6 +40,43 @@ namespace TabloidMVC.Repositories
         }
 
 
+        public Tag GetTagById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT Id, Name
+                        FROM Tag
+                        WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        // Reads data from the SQL command and stores it in a new instance of type Tag
+                        Tag tag = new Tag()
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Name = reader.GetString(reader.GetOrdinal("Name"))
+                        };
+
+                        reader.Close();
+                        // return it the controller
+                        return tag;
+                    }
+
+                    reader.Close();
+                    return null;
+                }
+            }
+        }
+
         public void AddTag(Tag tag)
         {
             using (SqlConnection conn = Connection)
@@ -61,6 +98,33 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+
+        public void EditTag(Tag tag)
+        {
+            // param of type id is from the GetTagById method and passed above
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    // runs the SQL command
+                    cmd.CommandText = @"
+                            UPDATE Tag
+                            SET 
+                            Name = @name
+                            WHERE Id = @id";
+
+                    // stores new values here
+                    cmd.Parameters.AddWithValue("@name", tag.Name);
+                    cmd.Parameters.AddWithValue("@id", tag.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
 
         public void AddTag()
         {
