@@ -148,19 +148,16 @@ namespace TabloidMVC.Controllers
         public ActionResult Edit(PostEditViewModel posteditviewmodel)
         {
 
-            //try
+            try
             {
                 _postRepository.UpdatePost(posteditviewmodel.Post);
 
                 return RedirectToAction("Index");
             }
-            //catch (Exception ex)
+            catch (Exception ex)
             {
-                //return View(post);
+                return View(posteditviewmodel.Post);
             }
-
         }
-
-
     }
 }
