@@ -115,6 +115,7 @@ namespace TabloidMVC.Controllers
             }
         }
 
+
         public ActionResult Edit(int id)
         {
             List<Category> categories = _categoryRepository.GetAll();
@@ -124,7 +125,7 @@ namespace TabloidMVC.Controllers
             {
                 CategoryOptions = categories,
                 Post = post
-            };
+            };  
 
             if (post == null)
             {
@@ -144,12 +145,12 @@ namespace TabloidMVC.Controllers
         // POST: Owners/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Post post)
+        public ActionResult Edit(PostEditViewModel posteditviewmodel)
         {
 
             //try
             {
-                _postRepository.UpdatePost(post);
+                _postRepository.UpdatePost(posteditviewmodel.Post);
 
                 return RedirectToAction("Index");
             }

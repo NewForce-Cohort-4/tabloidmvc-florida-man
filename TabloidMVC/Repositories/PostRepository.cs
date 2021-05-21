@@ -317,16 +317,15 @@ namespace TabloidMVC.Repositories
                             SET 
                                 Title = @title, 
                                 Content = @content, 
-                                Category = @category, 
-                                HeaderImage = @headerimage
+                                CategoryId = @categoryid, 
+                                ImageLocation = @headerimage
                                 
                             WHERE Id = @id";
 
                     cmd.Parameters.AddWithValue("@title", post.Title);
                     cmd.Parameters.AddWithValue("@content", post.Content);
-                    cmd.Parameters.AddWithValue("@category", post.Category);
+                    cmd.Parameters.AddWithValue("@categoryid", post.CategoryId);
                     cmd.Parameters.AddWithValue("@headerimage", post.ImageLocation);
-                    
                     cmd.Parameters.AddWithValue("@id", post.Id);
 
                     cmd.ExecuteNonQuery();
