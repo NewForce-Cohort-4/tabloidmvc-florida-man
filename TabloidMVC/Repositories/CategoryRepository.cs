@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 
@@ -46,49 +47,67 @@ namespace TabloidMVC.Repositories
                         VALUES (@Name)";
                     cmd.Parameters.AddWithValue("@Name", category.Name);
                     cmd.ExecuteNonQuery();
-                    //category.Id = (int)cmd.ExecuteScalar();
                 }
             }
         }
-        //public Post GetPublishedPostById(int id)
-        //{
-        //    using (var conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (var cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @"
-        //               SELECT p.Id, p.Title, p.Content, 
-        //                      p.ImageLocation AS HeaderImage,
-        //                      p.CreateDateTime, p.PublishDateTime, p.IsApproved,
-        //                      p.CategoryId, p.UserProfileId,
-        //                      c.[Name] AS CategoryName,
-        //                      u.FirstName, u.LastName, u.DisplayName, 
-        //                      u.Email, u.CreateDateTime, u.ImageLocation AS AvatarImage,
-        //                      u.UserTypeId, 
-        //                      ut.[Name] AS UserTypeName
-        //                 FROM Post p
-        //                      LEFT JOIN Category c ON p.CategoryId = c.id
-        //                      LEFT JOIN UserProfile u ON p.UserProfileId = u.id
-        //                      LEFT JOIN UserType ut ON u.UserTypeId = ut.id
-        //                WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME()
-        //                      AND p.id = @id";
+        public Category GetCategoryById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT Id, Name
+                         FROM Category
+                        WHERE Id = @id";
 
-        //            cmd.Parameters.AddWithValue("@id", id);
-        //            var reader = cmd.ExecuteReader();
+                    cmd.Parameters.AddWithValue("@id", id);
+                    var reader = cmd.ExecuteReader();
 
-        //            Post post = null;
+                    Category category = null;
 
-        //            if (reader.Read())
-        //            {
-        //                post = NewPostFromReader(reader);
-        //            }
+                    if (reader.Read())
+                    {
+                        category = NewCategoryFromReader(reader);
+                    }
 
-        //            reader.Close();
+                    reader.Close();
 
-        //            return post;
-        //        }
-        //    }
-        //}
+                    return category;
+                }
+            }
+        }
+        private Category NewCategoryFromReader(SqlDataReader reader)
+        {
+            return new Category()
+            {
+                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                Name = reader.GetString(reader.GetOrdinal("Name"))
+            };
+        }
+        public void EditCategory(Category category)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    // runs the SQL command
+                    cmd.CommandText = @"
+                            UPDATE Category
+                            SET 
+                            Name = @name
+                            WHERE Id = @id";
+
+                    // stores new values here
+                    cmd.Parameters.AddWithValue("@name", category.Name);
+                    cmd.Parameters.AddWithValue("@id", category.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
