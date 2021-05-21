@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
@@ -114,6 +115,49 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        
+
+        public ActionResult Edit(int id)
+        {
+            List<Category> categories = _categoryRepository.GetAll();
+            Post post = _postRepository.GetPostById(id);
+
+            PostEditViewModel vm = new PostEditViewModel()
+            {
+                CategoryOptions = categories,
+                Post = post
+            };  
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            else if (post.UserProfileId == GetCurrentUserProfileId())
+            {
+                return post.UserProfileId == GetCurrentUserProfileId() ? View(vm) : NotFound();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        // POST: Owners/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(PostEditViewModel posteditviewmodel)
+        {
+
+            try
+            {
+                _postRepository.UpdatePost(posteditviewmodel.Post);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(posteditviewmodel.Post);
+            }
+        }
     }
 }
